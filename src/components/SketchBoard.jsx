@@ -98,7 +98,7 @@ const SketchBoard = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-4">
+    <div className="flex flex-col items-center p-4 h-screen">
       <div className="flex flex-wrap justify-center space-x-4 mb-4">
         <button   className={`px-4 py-2 rounded hover:bg-gray-300 ${
             tool === 'pen' ? 'bg-yellow-400' : 'bg-gray-200'
@@ -110,13 +110,13 @@ const SketchBoard = () => {
         <input type="range" min="1" max="10" value={lineWidth} onChange={handleLineWidthChange} />
         <button className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" onClick={clearCanvas}>Clear</button>
         <button
-          className="hidden px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 mt-2 md:mt-0"
+          className="hidden md:block px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 mt-2 md:mt-0"
           onClick={handleDownload}
         >
           Download
         </button>
       </div>
-      <div className="border border-gray-300 rounded-lg shadow-lg bg-white mb-4 overflow-hidden w-80 md:w-full">
+      <div className="border border-gray-300 rounded-lg shadow-lg bg-white mb-4 overflow-hidden w-80 md:w-full h-3/4 md:h-full">
         <canvas ref={canvasRef} width={1500} height={750} />
       </div>
     </div>
