@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../FirebaseConfig';
 import background from '../assets/images/background.jpg';
@@ -7,36 +7,43 @@ import { useNavigate } from 'react-router-dom';
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
-  const [resetEmailSent, setResetEmailSent] = useState(false);
+  const [message, setMessage] = useState(null); // Unified state for messages
   const navigate = useNavigate();
-  const [emptyField, setEmptyField] = useState(false);
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage(null);
+      }, 3000); // 3000 milliseconds = 3 seconds
+      return () => clearTimeout(timer); // Cleanup the timer on component unmount or re-render
+    }
+  }, [message]);
 
   const handleSignIn = () => {
     if (!email || !password) {
-      setEmptyField(true);
+      setMessage({ type: 'emptyField', text: 'Please fill in the required fields first!' });
       return;
     }
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log('User signed in:', userCredential.user);
         navigate('/sketchboard');
-        setError(false);
+        setMessage(null); // Clear any existing message
       })
       .catch((error) => {
         console.error('Error signing in:', error.message);
-        setError(true);
+        setMessage({ type: 'error', text: 'Invalid Email or Password!' });
       });
   };
 
   const handlePasswordReset = () => {
     if (!email) {
-      setEmptyField(true);
+      setMessage({ type: 'emptyField', text: 'Please fill in the required fields first!' });
       return;
     }
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        setResetEmailSent(true);
+        setMessage({ type: 'resetEmailSent', text: 'Password reset email sent!' });
         console.log('Password reset email sent!');
       })
       .catch((error) => {
@@ -49,9 +56,15 @@ const SignIn = () => {
       style={{ backgroundImage: `url(${background})` }}>
       <div className="bg-peach p-8 border shadow-lg rounded-lg w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 mb-16 sm:mb-80">
         <h2 className="text-2xl mb-4 text-center">Sign In with Email and Password</h2>
-        {error && <p className="text-center text-lg text-red-500 mb-2">Invalid Email or Password!</p>}
-        {emptyField && <p className="text-center text-lg text-red-500 mb-2">Please fill in the required fields first!</p>}
-        {resetEmailSent && <p className="text-center text-lg text-green-500 mb-2">Password reset email sent!</p>}
+        {message && message.type === 'error' && (
+          <p className="text-center text-lg text-red-500 mb-2">{message.text}</p>
+        )}
+        {message && message.type === 'emptyField' && (
+          <p className="text-center text-lg text-red-500 mb-2">{message.text}</p>
+        )}
+        {message && message.type === 'resetEmailSent' && (
+          <p className="text-center text-lg text-green-500 mb-2">{message.text}</p>
+        )}
         <div className="flex flex-col gap-2">
           <input
             type="email"
