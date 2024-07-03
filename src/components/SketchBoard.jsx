@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { saveAs } from 'file-saver';
 
 const SketchBoard = () => {
   const canvasRef = useRef(null);
@@ -96,26 +97,33 @@ const SketchBoard = () => {
   //   link.href = canvas.toDataURL('image/png'); // Convert canvas content to data URL
   //   link.click(); // Initiate download
   // };
+  // const handleDownload = () => {
+  //   const canvas = canvasRef.current;
+  //   if (canvas.toBlob) {
+  //     canvas.toBlob((blob) => {
+  //       if (blob) {
+  //         const url = URL.createObjectURL(blob);
+  //         const link = document.createElement('a');
+  //         link.download = 'sketch.png';
+  //         link.href = url;
+  //         link.click();
+  //         setTimeout(() => URL.revokeObjectURL(url), 100);
+  //       }
+  //     }, 'image/png');
+  //   } else {
+  //     // Fallback for very old browsers
+  //     const link = document.createElement('a');
+  //     link.download = 'sketch.png';
+  //     link.href = canvas.toDataURL('image/png');
+  //     link.click();
+  //   }
+  // };
+
   const handleDownload = () => {
     const canvas = canvasRef.current;
-    if (canvas.toBlob) {
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.download = 'sketch.png';
-          link.href = url;
-          link.click();
-          setTimeout(() => URL.revokeObjectURL(url), 100);
-        }
-      }, 'image/png');
-    } else {
-      // Fallback for very old browsers
-      const link = document.createElement('a');
-      link.download = 'sketch.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    }
+    canvas.toBlob((blob) => {
+      saveAs(blob, 'sketch.png');
+    }, 'image/png');
   };
 
   return (
