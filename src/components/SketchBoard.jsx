@@ -90,35 +90,6 @@ const SketchBoard = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   };
 
-  // const handleDownload = () => {
-  //   const canvas = canvasRef.current;
-  //   const link = document.createElement('a');
-  //   link.download = 'sketch.png'; // Filename for the downloaded image
-  //   link.href = canvas.toDataURL('image/png'); // Convert canvas content to data URL
-  //   link.click(); // Initiate download
-  // };
-  // const handleDownload = () => {
-  //   const canvas = canvasRef.current;
-  //   if (canvas.toBlob) {
-  //     canvas.toBlob((blob) => {
-  //       if (blob) {
-  //         const url = URL.createObjectURL(blob);
-  //         const link = document.createElement('a');
-  //         link.download = 'sketch.png';
-  //         link.href = url;
-  //         link.click();
-  //         setTimeout(() => URL.revokeObjectURL(url), 100);
-  //       }
-  //     }, 'image/png');
-  //   } else {
-  //     // Fallback for very old browsers
-  //     const link = document.createElement('a');
-  //     link.download = 'sketch.png';
-  //     link.href = canvas.toDataURL('image/png');
-  //     link.click();
-  //   }
-  // };
-
   const handleDownload = () => {
     const canvas = canvasRef.current;
     canvas.toBlob((blob) => {
@@ -139,7 +110,7 @@ const SketchBoard = () => {
         <input type="range" min="1" max="10" value={lineWidth} onChange={handleLineWidthChange} />
         <button className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" onClick={clearCanvas}>Clear</button>
         <button
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 mt-2 md:mt-0"
+          className="hidden px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 mt-2 md:mt-0"
           onClick={handleDownload}
         >
           Download
